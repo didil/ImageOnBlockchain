@@ -1,3 +1,6 @@
+# ImageOnBlockchain
+Storing images and text on blockchain
+
 ## Running locally
 
 To start private network:
