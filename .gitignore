@@ -4,3 +4,5 @@ yarn-error.log
 .idea
 truffle.js
 build_webpack/
+.firebaserc
+firebase.json
