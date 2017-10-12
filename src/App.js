@@ -8,6 +8,7 @@ var NotificationSystem = require('react-notification-system');
 var Loader = require('react-loader');
 
 import SubmitForm from './components/SubmitForm';
+import FetchForm from './components/FetchForm';
 
 const IPFS = require('ipfs-mini');
 
@@ -22,7 +23,7 @@ class App extends Component {
 
     this.state = {
       web3: null,
-      submitFormDisplayed: true,
+      submitFormDisplayed: false,
       fetchFormDisplayed: false,
       recentSubmissions: []
     }
@@ -170,6 +171,12 @@ class App extends Component {
                                     credentialsStoreContractInstance={this.state.credentialsStoreContractInstance}
                                     addNotification={this.addNotification.bind(this)}
                                     onSubmit={this.onSubmit.bind(this)}/>
+                        : null}
+
+                      {this.state.fetchFormDisplayed ?
+                        <FetchForm web3={this.state.web3} ipfs={this.state.ipfs}
+                                    credentialsStoreContractInstance={this.state.credentialsStoreContractInstance}
+                                    addNotification={this.addNotification.bind(this)}/>
                         : null}
 
                     </div>

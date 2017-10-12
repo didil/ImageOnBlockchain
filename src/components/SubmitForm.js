@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 
-var Buffer = require('buffer/').Buffer
 var Loader = require('react-loader');
 
 
@@ -9,9 +8,9 @@ class SubmitForm extends Component {
     super(props);
 
     this.state = {
-      loadingPrice: false,
       credential: {},
-      savingImage: false
+      savingImage: false,
+      savingCredential: false
     };
   }
 
@@ -55,21 +54,21 @@ class SubmitForm extends Component {
   captureImage(event) {
     event.stopPropagation();
     event.preventDefault();
+    this.setState({savingImage: true});
     const file = event.target.files[0];
     let reader = new FileReader();
-    reader.onloadend = () => {
-      this.saveImageToIpfs(reader);
+    reader.onload = (fileLoadedEvent) =>  {
+      this.saveImageToIpfs(fileLoadedEvent.target.result);
     };
-    reader.readAsArrayBuffer(file);
+    reader.readAsDataURL(file);
   }
 
-  saveImageToIpfs(reader) {
+  saveImageToIpfs(base64Data) {
     let credential = this.state.credential;
     credential.imageHash = null;
-    this.setState({savingImage: false, credential});
-    const buffer = Buffer.from(reader.result);
+    this.setState({credential});
 
-    this.props.ipfs.add(buffer, (err, imageHash) => {
+    this.props.ipfs.add(base64Data, (err, imageHash) => {
       if (err) {
         this.setState({savingImage: false});
         return this.props.addNotification(err.message, "error");
@@ -79,7 +78,7 @@ class SubmitForm extends Component {
 
       let credential = this.state.credential;
       credential.imageHash = imageHash;
-      this.setState({credential});
+      this.setState({savingImage: false, credential});
     });
   }
 
@@ -100,7 +99,7 @@ class SubmitForm extends Component {
 
         <h4>Submit a Credential:</h4>
 
-        <form className="pure-form">
+        <form className="pure-form" onSubmit={(e) => event.preventDefault()}>
           <fieldset className="pure-group">
             <input type="text" className="pure-input-1-2" placeholder="Issuer"
                    value={this.state.credential.issuer} onChange={e => this.updateInputValue(e, 'issuer')}/>
