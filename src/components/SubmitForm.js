@@ -38,7 +38,7 @@ class SubmitForm extends Component {
       let credentialId = log.args._credentialId.toNumber();
       this.props.addNotification(`Data saved successfully ! Credential ID: ${credentialId}`, "success");
       this.setState({credential: {}});
-      this.props.onSubmit();
+      this.props.onSubmit(result.tx);
     }).catch((err) => {
       this.setState({savingCredential: false});
       this.props.addNotification(err.message, "error");

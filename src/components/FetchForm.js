@@ -61,7 +61,7 @@ class FetchForm extends Component {
       let queryMax, queryMin;
 
       queryMax = credentialsCount - 1;
-      queryMin = Math.max(0, queryMax - (MAX_RESULTS-1));
+      queryMin = Math.max(0, queryMax - (MAX_RESULTS - 1));
 
       for (let i = queryMax; i >= queryMin; i--) {
         let credentialId = await await this.props.credentialsStoreContractInstance.getCredentialIdByStatus(status, i);
@@ -99,6 +99,11 @@ class FetchForm extends Component {
     this.setState({[field]: e.target.value});
   }
 
+  obfuscate(hash) {
+    return hash.substring(0, 5) + "**********" + hash.substring(hash.length - 5, hash.length);
+  }
+
+
   renderCredential(credential) {
     return (
       <div className="credential" key={credential.credentialId}>
@@ -125,6 +130,10 @@ class FetchForm extends Component {
                 <img className="credential-image" src={credential.imageData} role="presentation"/>
               </div>
               : <em>Loading image ...</em>}
+          </div>
+          <div className="pure-u-5-5">
+            <label className="credential-field-label">IPFS Hash:</label>
+            <span className="credential-image-hash">{this.obfuscate(credential.imageHash)}</span>
           </div>
         </div>
       </div>);

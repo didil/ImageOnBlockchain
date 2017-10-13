@@ -95,7 +95,7 @@ class App extends Component {
       });
     }).catch((err) => {
       this.setState({loadingWeb3: false});
-      console.log('Error finding web3.',err.message);
+      console.log('Error finding web3.', err.message);
     });
   }
 
@@ -125,13 +125,17 @@ class App extends Component {
     this.setState({submitFormDisplayed: false});
   }
 
-  onSubmit() {
-    this.setState({submitFormDisplayed: false});
+  onSubmit(lastTxId) {
+    this.setState({submitFormDisplayed: false, lastTxId: lastTxId});
+  }
+
+  clearLastTxId(){
+    this.setState({ lastTxId: null});
   }
 
   render() {
     let noNetworkError = <h3 className="no-network">You're not connected to an Ethereum network. Please install <a
-        href="https://metamask.io/">MetaMask</a> or Mist</h3>;
+      href="https://metamask.io/">MetaMask</a> or Mist</h3>;
 
     return (
       <div className="App">
@@ -175,8 +179,8 @@ class App extends Component {
 
                       {this.state.fetchFormDisplayed ?
                         <FetchForm web3={this.state.web3} ipfs={this.state.ipfs}
-                                    credentialsStoreContractInstance={this.state.credentialsStoreContractInstance}
-                                    addNotification={this.addNotification.bind(this)}/>
+                                   credentialsStoreContractInstance={this.state.credentialsStoreContractInstance}
+                                   addNotification={this.addNotification.bind(this)}/>
                         : null}
 
                     </div>
@@ -186,7 +190,9 @@ class App extends Component {
                 }
               </Loader>
 
-
+              {this.state.lastTxId ?
+                <p>Last Transaction Id: {this.state.lastTxId} <a href="#" onClick={this.clearLastTxId.bind(this)} style={{color: "red"}}>x</a></p>
+                : null}
             </div>
             <div className="pure-u-3-24"></div>
           </div>
